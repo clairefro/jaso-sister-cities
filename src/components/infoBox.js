@@ -18,6 +18,7 @@ const InfoBox = ({ info, flyTo, closeInfoBox, infoIsVisible, type }) => {
     flyTo(curInfo.sisterItem.coords, 8)
     switchCities()
   }
+
   const switchCities = () => {
     setCurInfo({
       thisItem: curInfo.sisterItem,
@@ -31,15 +32,13 @@ const InfoBox = ({ info, flyTo, closeInfoBox, infoIsVisible, type }) => {
     return linkStr.replace(/\s/, "").split(",")
   }
 
-  const en_links =
-    curInfo.shared && curInfo.shared.en_links
-      ? linksToArray(curInfo.shared.en_links)
+  const getLinksByLang = lang_link => {
+    return curInfo.shared && curInfo.shared[lang_link]
+      ? linksToArray(curInfo.shared[lang_link])
       : []
-
-  const ja_links =
-    curInfo.shared && curInfo.shared.ja_links
-      ? linksToArray(curInfo.shared.ja_links)
-      : []
+  }
+  const en_links = getLinksByLang("en_links")
+  const ja_links = getLinksByLang("ja_links")
 
   const titleInfo_us_layout =
     type === "region" ? (
@@ -64,6 +63,7 @@ const InfoBox = ({ info, flyTo, closeInfoBox, infoIsVisible, type }) => {
         </h2>
       </>
     )
+
   const titleInfo_ja_layout =
     type === "region" ? (
       <>
@@ -90,15 +90,6 @@ const InfoBox = ({ info, flyTo, closeInfoBox, infoIsVisible, type }) => {
 
   const prettyUrl = url => {
     return url.match(/(?:https?:\/\/)?(?:www\.)?([\w\d-_]+\.\w+)/)[1]
-  }
-
-  const truncate = str => {
-    const maxLength = 24
-    if (str.length < maxLength) {
-      return str
-    } else {
-      return str.substring(0, maxLength) + " (...) "
-    }
   }
 
   const LinkItem = ({ link, flagSrc }) => (
