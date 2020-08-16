@@ -23,6 +23,7 @@
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.12.0",
+    "react-helmet-async": "^1.0.6",
     "react-inlinesvg": "^2.0.1",
     "react-mapbox-gl": "^4.8.6"
   },
@@ -36,7 +37,5 @@
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"
   },
-  "peerDependencies": {
-    "react-helmet-async": "^1.0.6"
-  }
+  "peerDependencies": {}
 }
