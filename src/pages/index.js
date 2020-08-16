@@ -22,7 +22,6 @@ export default function Home({ data }) {
   )
   const [center, setCenter] = useState(US_DEFAULT_CENTER.coord)
   const [zoom, setZoom] = useState(US_DEFAULT_CENTER.zoom)
-  const [isLight, setIsLight] = useState(false)
   const [infoBoxData, setInfoBoxData] = useState(null)
   const [infoIsVisible, setInfoIsVisible] = useState(false)
   const [selected, setSelected] = useState(null)
@@ -53,11 +52,6 @@ export default function Home({ data }) {
     setCenter([_center.lng, _center.lat])
   }
 
-  // TODO remove. for QA purpose only
-  const changeTheme = () => {
-    setIsLight(!isLight)
-  }
-
   const updateSelected = (usName, jaName) => {
     setSelected([usName, jaName])
   }
@@ -85,17 +79,9 @@ export default function Home({ data }) {
             jaCenter={JA_DEFAULT_CENTER}
             usCenter={US_DEFAULT_CENTER}
           />
-          <button onClick={changeTheme} className="btn-map-theme">
-            Change map theme　
-            <br />
-            地図のスタイルを変更する
-          </button>
+
           <Map
-            style={
-              isLight
-                ? "mapbox://styles/mapbox/light-v10"
-                : "mapbox://styles/mapbox/streets-v11"
-            }
+            style="mapbox://styles/mapbox/streets-v11"
             containerStyle={{
               height: "100%",
               width: "100%",
