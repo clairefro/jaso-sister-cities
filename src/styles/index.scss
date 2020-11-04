@@ -132,6 +132,7 @@ button {
 }
 
 .city-marker {
+  border: 2px solid white;
   width: 18px;
   height: 18px;
   background-color: var(--red);
@@ -149,6 +150,7 @@ button {
 }
 
 .region-marker {
+  border: 1px solid white;
   width: 18px;
   height: 18px;
   background-color: var(--blue);

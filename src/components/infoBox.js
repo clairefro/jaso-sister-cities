@@ -29,7 +29,7 @@ const InfoBox = ({ info, flyTo, closeInfoBox, infoIsVisible, type }) => {
 
   const linksToArray = linkStr => {
     if (!!!linkStr) return []
-    return linkStr.replace(/\s/, "").split(",")
+    return linkStr.replace(/\s/, "").split("|")
   }
 
   const getLinksByLang = lang_link => {
@@ -89,7 +89,9 @@ const InfoBox = ({ info, flyTo, closeInfoBox, infoIsVisible, type }) => {
     )
 
   const prettyUrl = url => {
-    return url.match(/(?:https?:\/\/)?(?:www\.)?([\w\d-_]+\.\w+)/)[1]
+    const matches = url.match(/(?:https?:\/\/)?(?:www\.)?([\w\d-_]+\.\w+)/)
+    // to account for extremely odd urls like Yoshikawa gov url, fallback to ugly url
+    return matches ? matches[1] : url
   }
 
   const LinkItem = ({ link, flagSrc }) => (

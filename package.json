@@ -16,7 +16,7 @@
     "gatsby": "^2.23.12",
     "gatsby-plugin-react-helmet-async": "^1.0.17-0",
     "gatsby-plugin-sass": "^2.3.12",
-    "gatsby-source-airtable": "^2.1.1",
+    "gatsby-source-airtable": "2.1.1",
     "gatsby-source-filesystem": "^2.3.22",
     "mapbox-gl": "^1.11.1",
     "node-sass": "^4.14.1",
