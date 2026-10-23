@@ -1,1 +1,1 @@
-note to self: Airtable update hooks handled by Zapier with dev gmail account
+note to self: see airtable tab for deploy instructions
