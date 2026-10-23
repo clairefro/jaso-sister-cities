@@ -66,6 +66,38 @@ export default function Home() {
     return arr1.toString() === arr2.toString()
   }
 
+  // Markers are drawn in the world copies around the current center, which drifts
+  // past ±180 after panning across the date line.
+  const markers = mapData.flatMap((d, i) => {
+    const item = d.data
+    const isRegion = item.isRegion === "true"
+    if (item.isInvalid === "true" || item.isInvalid === undefined) return []
+    const Component = isRegion ? Region : City
+    const pair = isRegion
+      ? [item.us_region, item.ja_region]
+      : [item.us_city, item.ja_city]
+
+    return ["us", "ja"].flatMap(type => {
+      const lon = Number(item[`${type}_lon`])
+      const nearest = Math.round((center[0] - lon) / 360) * 360
+      return [-360, 0, 360].map(copy => (
+        <Marker
+          key={`${i}-${isRegion ? "region" : "city"}-${type}-${copy}`}
+          coordinates={[lon + nearest + copy, item[`${type}_lat`]]}
+        >
+          <Component
+            data={item}
+            flyTo={flyTo}
+            populateInfoBox={populateInfoBox}
+            type={type}
+            select={updateSelected}
+            selected={isSameArray(selected, pair) ? "selected" : null}
+          />
+        </Marker>
+      ))
+    })
+  })
+
   const selectedPair =
     selected &&
     mapData.find(({ data: d }) =>
@@ -136,133 +168,7 @@ export default function Home() {
                   "line-translate": [0, -6],
                 }}
               />
-              {/* cities */}
-              {mapData
-                .filter(d => !(d.data.isRegion === "true"))
-                .map((d, i) => {
-                  const city = d.data
-                  const isInvalid =
-                    city.isInvalid === "true" || city.isInvalid === undefined
-                  if (isInvalid) return null
-
-                  return (
-                    <div className="city" key={i}>
-                      <Marker
-                        key={`${i}-city-us`}
-                        coordinates={[city.us_lon, city.us_lat]}
-                      >
-                        <City
-                          data={d.data}
-                          flyTo={flyTo}
-                          populateInfoBox={populateInfoBox}
-                          type="us"
-                          select={updateSelected}
-                          selected={
-                            isSameArray(selected, [city.us_city, city.ja_city])
-                              ? "selected"
-                              : null
-                          }
-                        ></City>
-                      </Marker>
-                    </div>
-                  )
-                })}
-              {mapData
-                .filter(d => !(d.data.isRegion === "true"))
-                .map((d, i) => {
-                  const city = d.data
-                  const isInvalid =
-                    city.isInvalid === "true" || city.isInvalid === undefined
-                  if (isInvalid) return null
-                  return (
-                    <div className="city" key={i}>
-                      <Marker
-                        key={`${i}-city-ja`}
-                        coordinates={[city.ja_lon, city.ja_lat]}
-                      >
-                        <City
-                          data={d.data}
-                          flyTo={flyTo}
-                          populateInfoBox={populateInfoBox}
-                          type="ja"
-                          select={updateSelected}
-                          selected={
-                            isSameArray(selected, [city.us_city, city.ja_city])
-                              ? "selected"
-                              : null
-                          }
-                        ></City>
-                      </Marker>
-                    </div>
-                  )
-                })}
-              {/* regions */}
-              {mapData
-                .filter(d => d.data.isRegion === "true")
-                .map((d, i) => {
-                  const region = d.data
-                  const isInvalid =
-                    region.isInvalid === "true" ||
-                    region.isInvalid === undefined
-                  if (isInvalid) return null
-                  return (
-                    <div className="region" key={i}>
-                      <Marker
-                        key={`${i}-region-us`}
-                        coordinates={[region.us_lon, region.us_lat]}
-                      >
-                        <Region
-                          data={d.data}
-                          flyTo={flyTo}
-                          populateInfoBox={populateInfoBox}
-                          type="us"
-                          select={updateSelected}
-                          selected={
-                            isSameArray(selected, [
-                              region.us_region,
-                              region.ja_region,
-                            ])
-                              ? "selected"
-                              : null
-                          }
-                        ></Region>
-                      </Marker>
-                    </div>
-                  )
-                })}
-              {mapData
-                .filter(d => d.data.isRegion === "true")
-                .map((d, i) => {
-                  const region = d.data
-                  const isInvalid =
-                    region.isInvalid === "true" ||
-                    region.isInvalid === undefined
-                  if (isInvalid) return null
-                  return (
-                    <div className="region" key={i}>
-                      <Marker
-                        key={`${i}-region-ja`}
-                        coordinates={[region.ja_lon, region.ja_lat]}
-                      >
-                        <Region
-                          data={d.data}
-                          flyTo={flyTo}
-                          populateInfoBox={populateInfoBox}
-                          type="ja"
-                          select={updateSelected}
-                          selected={
-                            isSameArray(selected, [
-                              region.us_region,
-                              region.ja_region,
-                            ])
-                              ? "selected"
-                              : null
-                          }
-                        ></Region>
-                      </Marker>
-                    </div>
-                  )
-                })}
+              {markers}
             </Map>
           </div>
         </div>
