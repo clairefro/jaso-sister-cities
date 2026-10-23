@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import SVG from "react-inlinesvg"
 
-import flag_us from "../../static/icons/flag-us.svg"
-import flag_ja from "../../static/icons/flag-ja.svg"
+const flag_us = "/icons/flag-us.svg"
+const flag_ja = "/icons/flag-ja.svg"
 
 const InfoBox = ({ info, flyTo, closeInfoBox, infoIsVisible, type }) => {
   const [curInfo, setCurInfo] = useState(info)

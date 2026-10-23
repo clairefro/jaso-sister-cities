@@ -1,27 +1,28 @@
 import React, { useState, useRef } from "react"
-import { graphql } from "gatsby"
 import ReactMapboxGl, { Marker } from "react-mapbox-gl"
-import SEO from "../components/SEO"
-import { HelmetProvider } from "react-helmet-async"
+import mapboxgl from "mapbox-gl"
+import "mapbox-gl/dist/mapbox-gl.css"
 
-import "../styles/index.scss"
+import "./styles/index.scss"
+import mapDataJson from "./data/map-data.json"
 
-import City from "../components/city"
-import Region from "../components/region"
-import InfoBox from "../components/infoBox"
-import Controls from "../components/controls"
+import City from "./components/city"
+import Region from "./components/region"
+import InfoBox from "./components/infoBox"
+import Controls from "./components/controls"
+
+// react-mapbox-gl sets the token on an interop copy of mapbox-gl under Vite, so set it here.
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
 
 const Map = ReactMapboxGl({
-  accessToken: process.env.GATSBY_MAPBOX_KEY,
+  accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
 })
 
 const US_DEFAULT_CENTER = { coord: [-122.676483, 44.023064], zoom: 5.3 }
 const JA_DEFAULT_CENTER = { coord: [139.839478, 35.652832], zoom: 4 }
 
-export default function Home({ data }) {
-  const [mapData] = useState(
-    (data && data.allAirtable && data.allAirtable.nodes) || []
-  )
+export default function Home() {
+  const [mapData] = useState(mapDataJson)
   const [center, setCenter] = useState(US_DEFAULT_CENTER.coord)
   const [zoom, setZoom] = useState(US_DEFAULT_CENTER.zoom)
   const [infoBoxData, setInfoBoxData] = useState(null)
@@ -64,8 +65,7 @@ export default function Home({ data }) {
   }
 
   return (
-    <HelmetProvider>
-      <SEO />
+    <>
       <div>
         <div className="container">
           <div className="map">
@@ -228,37 +228,9 @@ export default function Home({ data }) {
           </div>
         </div>
       </div>
-    </HelmetProvider>
+    </>
   )
 }
-
-export const query = graphql`
-  query mapDataQuery {
-    allAirtable {
-      nodes {
-        data {
-          us_region
-          us_region_j
-          us_lon
-          us_lat
-          us_city_j
-          us_city
-          ja_region_j
-          ja_region
-          ja_lon
-          ja_lat
-          ja_city_j
-          ja_city
-          year_established
-          en_links
-          ja_links
-          isInvalid
-          isRegion
-        }
-      }
-    }
-  }
-`
 
 // light style : mapbox://styles/mapbox/light-v10
 
