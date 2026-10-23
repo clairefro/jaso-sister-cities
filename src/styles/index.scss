@@ -189,6 +189,14 @@ button {
   display: block;
 }
 
+// Each marker's transform makes its own stacking context, so the label's z-index
+// can't escape; raise the whole marker instead.
+// react-mapbox-gl sets an inline z-index: 3 on each marker, hence !important.
+.mapboxgl-marker:hover,
+.mapboxgl-marker:has(.selected) {
+  z-index: 10 !important;
+}
+
 .info-links {
   width: 100%;
   display: flex;

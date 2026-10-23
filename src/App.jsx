@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react"
-import ReactMapboxGl, { Marker } from "react-mapbox-gl"
+import ReactMapboxGl, { Marker, GeoJSONLayer } from "react-mapbox-gl"
 import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 
 import "./styles/index.scss"
 import mapDataJson from "./data/map-data.json"
+import { arcCoordinates } from "./arc"
 
 import City from "./components/city"
 import Region from "./components/region"
@@ -65,6 +66,32 @@ export default function Home() {
     return arr1.toString() === arr2.toString()
   }
 
+  const selectedPair =
+    selected &&
+    mapData.find(({ data: d }) =>
+      d.isRegion === "true"
+        ? isSameArray(selected, [d.us_region, d.ja_region])
+        : isSameArray(selected, [d.us_city, d.ja_city])
+    )
+  const arcData = {
+    type: "FeatureCollection",
+    features: selectedPair
+      ? [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: arcCoordinates(
+                [selectedPair.data.us_lon, selectedPair.data.us_lat],
+                [selectedPair.data.ja_lon, selectedPair.data.ja_lat]
+              ),
+            },
+          },
+        ]
+      : [],
+  }
+
   return (
     <>
       <div>
@@ -99,6 +126,16 @@ export default function Home() {
               flyToOptions={{ speed: 0.8 }}
               ref={mapRef}
             >
+              <GeoJSONLayer
+                data={arcData}
+                lineLayout={{ "line-cap": "round", "line-join": "round" }}
+                linePaint={{
+                  "line-color": "#888888",
+                  "line-width": 3,
+                  "line-dasharray": [0, 2],
+                  "line-translate": [0, -6],
+                }}
+              />
               {/* cities */}
               {mapData
                 .filter(d => !(d.data.isRegion === "true"))
