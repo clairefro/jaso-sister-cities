@@ -10,6 +10,7 @@ import City from "./components/city"
 import Region from "./components/region"
 import InfoBox from "./components/infoBox"
 import Controls from "./components/controls"
+import AdminDeploy from "./components/adminDeploy"
 
 // react-mapbox-gl sets the token on an interop copy of mapbox-gl under Vite, so set it here.
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
@@ -83,6 +84,7 @@ export default function Home() {
               jaCenter={JA_DEFAULT_CENTER}
               usCenter={US_DEFAULT_CENTER}
             />
+            <AdminDeploy />
 
             <Map
               style="mapbox://styles/mapbox/streets-v11"
